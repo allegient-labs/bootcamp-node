@@ -1,25 +1,23 @@
 const validate = require('validate.js');
 
-class UnverifiedApplication {
+class UnsavedApplication {
   static init(data) {
     const validator = new Validator(data);
 
     if (validator.validate()) {
-      return Promise.resolve(new UnverifiedApplication(data));
+      return Promise.resolve(new UnsavedApplication(data));
     }
 
     return Promise.reject(validator.errors());
   }
 
   constructor({ name, email }) {
-    this.status = UnverifiedApplication.TYPE;
+    this.status = UnsavedApplication.TYPE;
 
     this.email = email;
     this.name = name;
   }
 }
-
-UnverifiedApplication.TYPE = 'UNVERIFIED';
 
 const CONSTRAINT = {
   name: { presence: { allowEmpty: false } },
@@ -41,4 +39,7 @@ class Validator {
   }
 }
 
-module.exports = UnverifiedApplication;
+UnsavedApplication.TYPE = 'UNSAVED';
+UnsavedApplication.Validator = Validator;
+
+module.exports = UnsavedApplication;

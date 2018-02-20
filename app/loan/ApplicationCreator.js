@@ -1,12 +1,12 @@
-const UnverifiedApplication = require('../../domain/UnverifiedApplication');
+const UnsavedApplication = require('../../domain/UnsavedApplication');
 
 class ApplicationCreator {
   constructor(dataStore) {
     this.dataStore = dataStore;
   }
 
-  start(unverifiedData) {
-    return UnverifiedApplication.init(unverifiedData).then(app =>
+  start(newData) {
+    return UnsavedApplication.init(newData).then(app =>
       this.dataStore.save(app)
     );
   }

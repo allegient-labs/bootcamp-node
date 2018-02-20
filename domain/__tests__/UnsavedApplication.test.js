@@ -1,18 +1,18 @@
-const UnverifiedApplication = require('../UnverifiedApplication');
+const UnsavedApplication = require('../UnsavedApplication');
 
-describe(UnverifiedApplication.name, () => {
+describe(UnsavedApplication.name, () => {
   test('#init returns resolved Promise when data is valid', () => {
-    const appPromise = UnverifiedApplication.init({
+    const appPromise = UnsavedApplication.init({
       name: 'p1',
       email: 'e1@c1.com'
     });
     expect(appPromise).resolves.toEqual(
-      expect.objectContaining({ status: UnverifiedApplication.TYPE })
+      expect.objectContaining({ status: UnsavedApplication.TYPE })
     );
   });
 
   test('#init returns rejected Promise when data is invalid', () => {
-    const appPromise = UnverifiedApplication.init({});
+    const appPromise = UnsavedApplication.init({});
 
     expect(appPromise).rejects.toEqual(
       expect.objectContaining({ name: ["Name can't be blank"] })
@@ -20,7 +20,7 @@ describe(UnverifiedApplication.name, () => {
   });
 
   test('#name', () => {
-    const application = new UnverifiedApplication({
+    const application = new UnsavedApplication({
       name: 'P1',
       email: 'e1@c1.com'
     });
@@ -29,7 +29,7 @@ describe(UnverifiedApplication.name, () => {
   });
 
   test('#email', () => {
-    const application = new UnverifiedApplication({
+    const application = new UnsavedApplication({
       name: 'P1',
       email: 'e1@c1.com'
     });
