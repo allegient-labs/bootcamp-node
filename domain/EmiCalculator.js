@@ -4,7 +4,7 @@ class EmiCalculator {
     this.numOfPayments = loanPeriodInYears * 12;
   }
 
-  getEmi(principal) {
+  calcEmi(principal) {
     const balanceRate = Math.pow(1 + this.interestRate, this.numOfPayments);
 
     const emi = this.interestRate * principal * balanceRate / (balanceRate - 1);

@@ -24,5 +24,5 @@ test('Equated Monthly Installment', () => {
     loanPeriodInYears: 1
   });
 
-  expect(calc.getEmi(100)).toBeCloseTo(8.38, 1);
+  expect(calc.calcEmi(100)).toBeCloseTo(8.38, 1);
 });
