@@ -1,16 +1,12 @@
 const ApplicationCreator = require('../ApplicationCreator');
 
 describe(ApplicationCreator.name, () => {
-  test('Start Loan Application.id', () => {
-    const application = ApplicationCreator.start();
+  test(`#start returns saved applciation promise`, () => {
+    const expectedApp = { name: 'P1', email: 'e1@test.com' };
+    const dataStore = { save: jest.fn(app => Promise.resolve(app)) };
 
-    expect(application.status).toBe('UNVERIFIED');
-  });
+    const appPromise = new ApplicationCreator(dataStore).start(expectedApp);
 
-  test('save application', () => {
-    const creator = new ApplicationCreator({ save: jest.fn(() => true) });
-    const application = ApplicationCreator.start();
-
-    expect(creator.save(application)).toBeTruthy();
+    expect(appPromise).resolves.toEqual(expect.objectContaining(expectedApp));
   });
 });
