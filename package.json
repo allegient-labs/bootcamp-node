@@ -1,10 +1,11 @@
 {
-  "name": "bootcamp-loan-calculator-node",
-  "version": "0.0.0",
+  "name": "bootcamp-node",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jest --watch --coverage",
+    "test": "jest --coverage",
+    "test:dev": "jest --coverage --watch",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
