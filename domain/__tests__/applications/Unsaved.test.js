@@ -1,8 +1,8 @@
-const UnsavedApplication = require('../UnsavedApplication');
+const UnsavedApplication = require('../../applications/Unsaved');
 
 describe(UnsavedApplication.name, () => {
   test('#init returns resolved Promise when data is valid', () => {
-    const appPromise = UnsavedApplication.init({
+    const appPromise = UnsavedApplication.initIfValid({
       name: 'p1',
       email: 'e1@c1.com'
     });
@@ -12,7 +12,7 @@ describe(UnsavedApplication.name, () => {
   });
 
   test('#init returns rejected Promise when data is invalid', () => {
-    const appPromise = UnsavedApplication.init({});
+    const appPromise = UnsavedApplication.initIfValid({});
 
     expect(appPromise).rejects.toEqual(
       expect.objectContaining({ name: ["Name can't be blank"] })

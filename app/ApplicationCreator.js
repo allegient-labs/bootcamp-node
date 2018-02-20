@@ -1,4 +1,4 @@
-const UnsavedApplication = require('../domain/UnsavedApplication');
+const UnsavedApplication = require('../domain/applications/Unsaved');
 
 class ApplicationCreator {
   constructor(dataStore) {
@@ -6,9 +6,7 @@ class ApplicationCreator {
   }
 
   start(newData) {
-    return UnsavedApplication.init(newData).then(app =>
-      this.dataStore.save(app)
-    );
+    return UnsavedApplication.initIfValid(newData).then(this.dataStore.save);
   }
 }
 
