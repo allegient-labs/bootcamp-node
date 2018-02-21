@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./http/www",
+
     "test": "jest --coverage",
     "test:dev": "jest --coverage --watch",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
