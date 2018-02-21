@@ -1,28 +1,26 @@
 const EmiCalculator = require('../EmiCalculator');
 
-test('Periodic Interest Rate', () => {
-  const calc = new EmiCalculator({
-    annualInterestRate: 10,
-    loanPeriodInYears: 1
-  });
+test('principal', () => {
+  const calc = new EmiCalculator({ principal: 100 });
 
-  expect(calc.interestRate).toBeCloseTo(0.0083, 4);
+  expect(calc.principal).toBe(100);
 });
 
 test('Total number of payments', () => {
-  const calc = new EmiCalculator({
-    annualInterestRate: 1,
-    loanPeriodInYears: 1
-  });
+  const calc = new EmiCalculator({ loanPeriodInYears: 1 });
 
   expect(calc.numOfPayments).toBe(12);
 });
 
 test('Equated Monthly Installment', () => {
   const calc = new EmiCalculator({
-    annualInterestRate: 1,
-    loanPeriodInYears: 1
+    principal: 100,
+    loanPeriodInYears: 1 / 12
   });
 
-  expect(calc.calcEmi(100)).toBeCloseTo(8.38, 1);
+  // principal   = $100
+  // loan period = 1 month
+  // interest    = 1% per month
+  //      => EMI = $101
+  expect(calc.calcEmi(12)).toBe(101);
 });

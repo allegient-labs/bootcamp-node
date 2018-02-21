@@ -1,13 +1,14 @@
 class EmiCalculator {
-  constructor({ annualInterestRate, loanPeriodInYears }) {
-    this.interestRate = annualInterestRate / 12 / 100;
+  constructor({ principal, loanPeriodInYears }) {
+    this.principal = principal;
     this.numOfPayments = loanPeriodInYears * 12;
   }
 
-  calcEmi(principal) {
-    const balanceRate = Math.pow(1 + this.interestRate, this.numOfPayments);
+  calcEmi(annualInterestRate) {
+    const interestRate = annualInterestRate / 12 / 100;
+    const balanceRate = Math.pow(1 + interestRate, this.numOfPayments);
 
-    const emi = this.interestRate * principal * balanceRate / (balanceRate - 1);
+    const emi = interestRate * this.principal * balanceRate / (balanceRate - 1);
     return round(emi);
   }
 }

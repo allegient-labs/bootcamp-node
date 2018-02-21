@@ -6,7 +6,7 @@
     "start": "node ./http/www",
 
     "test": "jest --coverage",
-    "test:dev": "jest --coverage --watch",
+    "test:dev": "jest --watch",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
