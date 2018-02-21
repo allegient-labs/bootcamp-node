@@ -1,4 +1,5 @@
 const validate = require('validate.js');
+const UnverifiedApplication = require('./Unverified');
 
 const CONSTRAINT = {
   name: { presence: { allowEmpty: false } },
@@ -21,6 +22,10 @@ class UnsavedApplication {
 
     this.email = email;
     this.name = name;
+  }
+
+  nextStep(savedRawApplication) {
+    return new UnverifiedApplication(savedRawApplication);
   }
 }
 

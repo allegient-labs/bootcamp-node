@@ -7,6 +7,6 @@ describe(ApplicationCreator.name, () => {
 
     const appPromise = new ApplicationCreator(dataStore).start(expectedApp);
 
-    expect(appPromise).resolves.toEqual(expect.objectContaining(expectedApp));
+    expect(appPromise).resolves.toMatchObject(expectedApp);
   });
 });

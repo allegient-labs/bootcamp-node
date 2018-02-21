@@ -6,17 +6,15 @@ describe(UnsavedApplication.name, () => {
       name: 'p1',
       email: 'e1@c1.com'
     });
-    expect(appPromise).resolves.toEqual(
-      expect.objectContaining({ status: UnsavedApplication.TYPE })
-    );
+    expect(appPromise).resolves.toMatchObject({
+      status: UnsavedApplication.TYPE
+    });
   });
 
   test('#init returns rejected Promise when data is invalid', () => {
     const appPromise = UnsavedApplication.initIfValid({});
 
-    expect(appPromise).rejects.toEqual(
-      expect.objectContaining({ name: ["Name can't be blank"] })
-    );
+    expect(appPromise).rejects.toMatchObject({ name: ["Name can't be blank"] });
   });
 
   test('#name', () => {

@@ -1,9 +1,8 @@
 class UnverifiedApplication {
-  constructor(id, unsavedApplication) {
-    Object.assign(this, unsavedApplication);
+  constructor(savedRawApplication) {
+    Object.assign(this, savedRawApplication);
 
     this.status = UnverifiedApplication.TYPE;
-    this.id = id;
   }
 }
 

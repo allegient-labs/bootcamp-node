@@ -4,15 +4,10 @@ const UnsavedApplication = require('../../applications/Unsaved');
 describe(UnverifiedApplication.name, () => {
   test('#new copies all properities of unsaved application', () => {
     const unverified = new UnverifiedApplication(
-      null,
-      new UnsavedApplication({ name: 'p1' })
+      new UnsavedApplication({ name: 'p1', email: 'e1@test.com' })
     );
-    expect(unverified.name).toEqual('p1');
-  });
 
-  test('#new sets id', () => {
-    const unverified = new UnverifiedApplication('id1', null);
-    expect(unverified.id).toEqual('id1');
+    expect(unverified).toMatchObject({ name: 'p1', email: 'e1@test.com' });
   });
 
   test(`#new sets status to 'UNVERIFIED'`, () => {
