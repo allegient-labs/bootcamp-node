@@ -1,70 +1,134 @@
 const EmiCalculator = require('./EmiCalculator');
 
-class LoanApprovalCalculator {
-  constructor({ creditScore, downPayment, principal, annualIncome }) {
-    this.annualIncome = annualIncome;
+class Applicant {
+  constructor({ creditScore, downPayment, annualIncome }) {
+    this.monthlyIncome = annualIncome / 12;
     this.downPayment = downPayment;
-    this.principal = principal;
+    this.interestRange = selectInterestRateRange(creditScore);
+  }
+}
 
+class Property {
+  constructor({ price }) {
+    this.price = price;
     this.propertyTax = 5 / 100;
-    this.homeInsurance = principal * 1 / 100;
+    this.homeInsurance = price * 1 / 100;
+  }
+}
 
-    this.interestRate = interestRateRange(creditScore);
+class Application {
+  constructor(applicant, property) {
+    this.applicant = applicant;
+    this.property = property;
+
     this.emiCalc = new EmiCalculator({
-      principal: this.principal,
+      principal: this.property.price,
       loanPeriodInYears: 30 * 12
     });
+
+    this.totalMonthlyPayment = this.totalMonthlyPayment.bind(this);
   }
 
   bestInterestRate() {
-    const monthlyIncome = this.annualIncome / 12;
+    const rate = this.applicant.interestRange.rates.find(rate =>
+      rate.doesQualify(this.applicant.monthlyIncome, this.totalMonthlyPayment)
+    );
 
-    let tmPayment = this.totalMonthlyPayment(this.interestRate.primary);
-    if (tmPayment <= 0.28 * monthlyIncome) {
-      return this.interestRate.primary;
-    }
-
-    tmPayment = this.totalMonthlyPayment(this.interestRate.secondary);
-    if (tmPayment > 0.28 * monthlyIncome && tmPayment <= 0.35 * monthlyIncome) {
-      return this.interestRate.secondary;
-    }
-
-    tmPayment = this.totalMonthlyPayment(this.interestRate.tertiary);
-    if (tmPayment > 0.35 * monthlyIncome) {
-      return this.interestRate.tertiary;
-    }
+    return rate && rate.interest;
   }
 
   totalMonthlyPayment(interest) {
     const payment =
-      this.emiCalc.calcEmi(interest) +
-      this.principal * this.propertyTax / 12 +
-      this.homeInsurance / 12;
+      this.emiCalc.emi(interest) +
+      this.property.price * this.property.tax / 12 +
+      this.property.insurance / 12;
 
-    return this.downPayment < 0.2 * this.principal
+    return this.applicant.downPayment < 0.2 * this.property.price
       ? payment
-      : this.principal * 1 / 100 / 12;
+      : this.property.price * 1 / 100 / 12;
   }
 }
 
-function interestRateRange(creditScore) {
-  const INTEREST_RATES = {
-    good: { primary: 3, secondary: 4, tertiary: 'DENIED' },
-    average: { primary: 4, secondary: 5, tertiary: 'DENIED' },
-    bad: { primary: 5, secondary: 6, tertiary: 'DENIED' }
-  };
-
-  if (creditScore >= 750) {
-    return INTEREST_RATES.good;
-  }
-
-  if (creditScore >= 600 && creditScore < 750) {
-    return INTEREST_RATES.average;
-  }
-
-  if (creditScore < 600) {
-    return INTEREST_RATES.bad;
-  }
+function selectInterestRateRange(creditScore) {
+  return PRIORITY_INTEREST_RATES.find(range => range.doesQualify(creditScore));
 }
 
-module.exports = LoanApprovalCalculator;
+const PRIORITY_INTEREST_RATES = [
+  {
+    type: 'GOOD',
+    rates: [
+      {
+        interest: 3,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(3);
+          return tmPayment <= 0.28 * monthlyIncome;
+        }
+      },
+      {
+        interest: 4,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(4);
+          return (
+            tmPayment > 0.28 * monthlyIncome &&
+            tmPayment <= 0.35 * monthlyIncome
+          );
+        }
+      }
+    ],
+    doesQualify(creditScore) {
+      return creditScore >= 750;
+    }
+  },
+  {
+    type: 'AVERAGE',
+    rates: [
+      {
+        interest: 4,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(4);
+          return tmPayment <= 0.28 * monthlyIncome;
+        }
+      },
+      {
+        interest: 5,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(5);
+          return (
+            tmPayment > 0.28 * monthlyIncome &&
+            tmPayment <= 0.35 * monthlyIncome
+          );
+        }
+      }
+    ],
+    doesQualify(creditScore) {
+      return creditScore >= 600 && creditScore < 750;
+    }
+  },
+  {
+    type: 'BAD',
+    rates: [
+      {
+        interest: 5,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(5);
+          return tmPayment <= 0.28 * monthlyIncome;
+        }
+      },
+      {
+        interest: 6,
+        doesQualify: (monthlyIncome, monthlyPaymentCalculator) => {
+          let tmPayment = monthlyPaymentCalculator(6);
+          return (
+            tmPayment > 0.28 * monthlyIncome &&
+            tmPayment <= 0.35 * monthlyIncome
+          );
+        }
+      }
+    ],
+    doesQualify(creditScore) {
+      return creditScore < 600;
+    }
+  }
+];
+
+module.exports = { Application, Applicant, Property };

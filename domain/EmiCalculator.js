@@ -4,7 +4,7 @@ class EmiCalculator {
     this.numOfPayments = loanPeriodInYears * 12;
   }
 
-  calcEmi(annualInterestRate) {
+  emi(annualInterestRate) {
     const interestRate = annualInterestRate / 12 / 100;
     const balanceRate = Math.pow(1 + interestRate, this.numOfPayments);
 

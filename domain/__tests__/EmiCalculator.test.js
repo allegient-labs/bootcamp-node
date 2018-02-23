@@ -22,5 +22,5 @@ test('Equated Monthly Installment', () => {
   // loan period = 1 month
   // interest    = 1% per month
   //      => EMI = $101
-  expect(calc.calcEmi(12)).toBe(101);
+  expect(calc.emi(12)).toBe(101);
 });
